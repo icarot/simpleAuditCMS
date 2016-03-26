@@ -90,13 +90,13 @@ class CheckDirFile {
 	public function SearchTypeFileonDir ($typefile, $dirpath){
 		$filelistdir = scandir("$dirpath");
 
-		echo "<br/> <b> Exists PHP file in the directory ($dirpath)? </b> <br/>";
+		echo "<br/> <b> Exists " . strtoupper($typefile) . " file in the directory ($dirpath)? </b> <br/>";
 		$negativeanswer = 0;
 		foreach( $filelistdir as $files ){
 			if(!is_dir($files) and $files != "." and $files != ".."){
 			$ext = pathinfo($files, PATHINFO_EXTENSION);
 			if($ext == $typefile){
-				echo "Please, verify this PHP file in the diretory: " . $files . " (OFF) <br/>";
+				echo "Please, verify this " . strtoupper($typefile) . " file in the diretory: " . $files . " (OFF) <br/>";
 				$negativeanswer++;
 			}
 			}
@@ -139,21 +139,19 @@ echo ". Please, verify the latest version on the Wordpress website: <a href='htt
 
 //Verify if the permission of the file "readme.html" allows to access the page by third party.
 
-$readmefiletest = new CheckDirFile();
-$readmefiletest->CheckPerm($CORRECTPERM, $READMEFILE);
+$WPauditCheck = new CheckDirFile();
+$WPauditCheck->CheckPerm($CORRECTPERM, $READMEFILE);
 
 //#########################################################
 
 //Verify if the permission of the file  "./wp-admin/install.php" allows to access the page by third party.
 
-$installwpfiletest = new CheckDirFile();
-$installwpfiletest->CheckPerm($CORRECTPERM, $INSTALLWPFILE);
+$WPauditCheck->CheckPerm($CORRECTPERM, $INSTALLWPFILE);
 //#########################################################
 
 //Verify if the permission of the file xmlrpc.php allows to access the page by third party.
 
-$xmlrpcfiletest = new CheckDirFile();
-$xmlrpcfiletest->CheckPerm($CORRECTPERM, $XMLRPCFILE);
+$WPauditCheck->CheckPerm($CORRECTPERM, $XMLRPCFILE);
 //#########################################################
 
 //Verify if the blank index.html are in the directories to avoid directory browsing.
@@ -186,15 +184,13 @@ echo "<br/> <b> It uses SSL Connection? </b> <br/>";
 
 
 echo "<br/> <br/> <b> ### Installed Plugins ### </b> <br/>";
-$listpluginsondir = new CheckDirFile();
-$listpluginsondir->ListFilesonDir($WPPLUGINDIR);
+$WPauditCheck->ListFilesonDir($WPPLUGINDIR);
 //#########################################################
 
 //Lists all the themes installed in the wordpress.
 
 echo "<br/> <b> ### Installed Themes ### </b> <br/>";
-$listthemesondir = new CheckDirFile();
-$listthemesondir->ListFilesonDir($WPTHEMEDIR);
+$WPauditCheck->ListFilesonDir($WPTHEMEDIR);
 //#########################################################
 
 //Verify if exists backup file "tar.gz" and ".zip" (etc) or backup of the database. 
@@ -219,26 +215,22 @@ if ($negativeanswer == 0){
 
 //Verify if exists ".php" files in the JS directory. 
 
-$phpwpincludesjstest = new CheckDirFile();
-$phpwpincludesjstest->SearchTypeFileonDir("php", $WPINCLUDESJSDIR);
+$WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESJSDIR);
 //#########################################################
 
 //Verify if exists ".php" files in the CSS directory. 
 
-$phpwpincludescsstest = new CheckDirFile();
-$phpwpincludescsstest->SearchTypeFileonDir("php", $WPINCLUDESCSSDIR);
+$WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESCSSDIR);
 //#########################################################
 
 //Verify if exists ".php" files in the JS directory. 
 
-$phpwpadminjstest = new CheckDirFile();
-$phpwpadminjstest->SearchTypeFileonDir("php", $WPADMINJSDIR);
+$WPauditCheck->SearchTypeFileonDir("php", $WPADMINJSDIR);
 //#########################################################
 
 //Verify if exists ".php" files in the CSS directory. 
 
-$phpwpadmincsstest = new CheckDirFile();
-$phpwpadmincsstest->SearchTypeFileonDir("php", $WPADMINCSSDIR);
+$WPauditCheck->SearchTypeFileonDir("php", $WPADMINCSSDIR);
 //#########################################################
 
 echo "<br/> <b> Additional Recommendations: </b> <br/> <br/>";
