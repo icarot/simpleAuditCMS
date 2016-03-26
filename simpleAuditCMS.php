@@ -3,7 +3,7 @@
 Simple Audit CMS: this script is intended to verify if same security configuration are applied on the CMS.
 
 @author: Icaro Torres
-@version: 0.1.0
+@version: 0.2.0
 
 #### Wordpress ####:
 
@@ -32,8 +32,17 @@ update 19-Marc-2016:
 update 23-Marc-2016:
 - added the version verification of the Wordpress;
 - Wordpress instalation verification;
+
+update 25-Marc-2016:
+- Created a class with a method to verify a file permission based in the security recommendation.
+- Created a method in a class to verify some kind of file on a directory. 
+- Created a method in a class to list files in a directory. Cleaning up the code, avoiding to repeat the same code in similar functions that test different files and directories;
 ##################
 
+TODO:
+
+- Function to verify TXT files in the administrative directories of Wordpress;
+- Change all the function repeated into PHP OOP class;
 */
 
 echo "<h2> #### Simple Audit CMS #### </h2> <br/>";
@@ -44,6 +53,74 @@ echo "Supported CMS: Wordpress. <br/><br/>";
 //#########################################################
 echo "<b>REPORT(" . strftime('%d/%B/%Y') ."): </b> <br/> <br/>";
 //#########################################################
+
+//GLOBAL VARIABLES
+
+$CORRECTPERM = "0600";
+$READMEFILE = "readme.html";
+$INSTALLWPFILE = "wp-admin/install.php";
+$XMLRPCFILE = "xmlrpc.php";
+$WPINCLUDESJSDIR = "./wp-includes/js";
+$WPINCLUDESCSSDIR = "./wp-includes/css";
+$WPADMINJSDIR = "./wp-admin/js";
+$WPADMINCSSDIR = "./wp-admin/css";
+$WPPLUGINDIR = "./wp-content/plugins/";
+$WPTHEMEDIR = "./wp-content/themes/";
+
+//CLASS
+
+class CheckDirFile {
+//Verify if the passed file has the correct permission.
+//##############
+	public function CheckPerm($correctperm, $dirpath){
+		if(file_exists($dirpath)){
+			echo "The file $dirpath exists. ";
+			$currentperm = substr(sprintf('%o', fileperms($dirpath)), -4);
+				if($currentperm !== $correctperm){
+					echo "The permission is not correct, $currentperm. Please, put the 0600 permission. (OFF) <br/>";
+				} else {
+					echo "The permission is correct, $currentperm. (OK) <br/>";
+				}
+		} else {
+			echo "The file $dirpath doesn't exists (OK) <br/>";
+			}
+	}
+
+//Verify some file type in a directory.	
+	public function SearchTypeFileonDir ($typefile, $dirpath){
+		$filelistdir = scandir("$dirpath");
+
+		echo "<br/> <b> Exists PHP file in the directory ($dirpath)? </b> <br/>";
+		$negativeanswer = 0;
+		foreach( $filelistdir as $files ){
+			if(!is_dir($files) and $files != "." and $files != ".."){
+			$ext = pathinfo($files, PATHINFO_EXTENSION);
+			if($ext == $typefile){
+				echo "Please, verify this PHP file in the diretory: " . $files . " (OFF) <br/>";
+				$negativeanswer++;
+			}
+			}
+		}
+		if ($negativeanswer == 0){
+			echo "No! (OK) <br/>";
+		}
+	}
+	
+//List all files in a directory.
+	public function ListFilesonDir ($dirpath){
+		
+		$listfile = scandir($dirpath);
+		foreach( $listfile as $file ){
+			$file_full_path = "$dirpath$file/";
+			if(is_dir($file_full_path) and $file != "." and $file != ".."){
+				echo '- ' . $file . '<br/>';
+			}	
+		}
+	}
+//##############
+	
+}
+
 
 //##### WORDPRESS ##### BEGIN
 //Wordpress instalation test.
@@ -57,49 +134,32 @@ require( dirname( __FILE__ ) . '/wp-blog-header.php' );
 
 echo "The current version of the Wordpress is: "; 
 bloginfo('version');
-echo ". Please, verify the latest version on the Wordpress website: <a href='https://wordpress.org/download/'> Click Here </a> <br/>";
+echo ". Please, verify the latest version on the Wordpress website: <a href='https://wordpress.org/download/'> Click Here </a> <br/> <br/>";
 //#########################################################
 
-//Verify if the permission of the file  readme.html allows to access the page by third party.
+//Verify if the permission of the file "readme.html" allows to access the page by third party.
 
-$readme = 'readme.html';
-if(file_exists($readme)){
-	echo "<br/><br/> The file $readme exists. ";
-	$permreadme = substr(sprintf('%o', fileperms($readme)), -4);
-		if ($permreadme !== "0600"){
-			echo "The permission is not correct, $permreadme. Please, put the 0600 permission. (OFF)";
-		
-		} else {
-			echo "The permission is correct, $permreadme. (OK)";
-		}
-} else {
-	echo "The file $readme doesn't exists (OK)";
-}
+$readmefiletest = new CheckDirFile();
+$readmefiletest->CheckPerm($CORRECTPERM, $READMEFILE);
 
 //#########################################################
 
 //Verify if the permission of the file  "./wp-admin/install.php" allows to access the page by third party.
 
-$installfile = 'wp-admin/install.php';
-if(file_exists($installfile)){
-	echo "<br/> The file $installfile exists. ";
-	$perminstallfile = substr(sprintf('%o', fileperms($installfile)), -4);
-		if ($perminstallfile !== "0600"){
-			echo "The permission is not correct, $perminstallfile. Please, put the 0600 permission. (OFF)";
-		
-		} else {
-			echo "The permission is correct, $perminstallfile. (OK)";
-		}
-} else {
-	echo "The file $readme doesn't exists (OK)";
-}
+$installwpfiletest = new CheckDirFile();
+$installwpfiletest->CheckPerm($CORRECTPERM, $INSTALLWPFILE);
+//#########################################################
 
+//Verify if the permission of the file xmlrpc.php allows to access the page by third party.
+
+$xmlrpcfiletest = new CheckDirFile();
+$xmlrpcfiletest->CheckPerm($CORRECTPERM, $XMLRPCFILE);
 //#########################################################
 
 //Verify if the blank index.html are in the directories to avoid directory browsing.
 
 $indexes = array("wp-includes/", "wp-content/", "wp-content/themes/", "wp-content/uploads/", "wp-content/plugins/");
-echo "<br/><br/> <b> ### Browsing Directory ### </b> <br/>";
+echo "<br/> <b> ### Browsing Directory ### </b> <br/>";
 foreach ($indexes as $dirs){
 	$currentdir = $dirs."index.html";
 	if(!file_exists($currentdir)){
@@ -123,54 +183,23 @@ echo "<br/> <b> It uses SSL Connection? </b> <br/>";
 //#########################################################
 
 //Lists all the plugins installed in the wordpress.
-$plugindir = './wp-content/plugins/';
-$pluginlist = scandir($plugindir);
+
+
 echo "<br/> <br/> <b> ### Installed Plugins ### </b> <br/>";
-
-foreach( $pluginlist as $plugin ){
-	$plugin_full_path = "$plugindir$plugin/";
-	if(is_dir($plugin_full_path) and $plugin != "." and $plugin != ".."){
-		echo '- ' . $plugin . '<br/>';
-	}
-}
-
+$listpluginsondir = new CheckDirFile();
+$listpluginsondir->ListFilesonDir($WPPLUGINDIR);
 //#########################################################
 
 //Lists all the themes installed in the wordpress.
-$themedir = './wp-content/themes/';
-$themelist = scandir($themedir);
+
 echo "<br/> <b> ### Installed Themes ### </b> <br/>";
-
-foreach( $themelist as $theme ){
-	$theme_full_path = "$themedir$theme/";
-	if(is_dir($theme_full_path) and $theme != "." and $theme != ".."){
-		echo '- ' . $theme . '<br/>';
-	}
-}
-
-//#########################################################
-
-//Verify if the permission of the file xmlrpc.php allows to access the page by third party.
-$xmlrpc = 'xmlrpc.php';
-echo "<br/>";
-if(file_exists($xmlrpc)){
-	echo "The file $xmlrpc exists. ";
-	$permxmlrpc = substr(sprintf('%o', fileperms($xmlrpc)), -4);
-		if ($permxmlrpc !== "0600"){
-			echo "The $xmlrpc file is publicly available (for everyone), $permxmlrpc. Please, put the 0600 permission, if you don't use it at all, because it allows XML-RPC Brute Force Attack. (OFF)";
-		
-		} else {
-			echo "The permission is correct, $permxmlrpc. This file isn't publicly available. (OK)";
-		}
-} else {
-	echo "The file $xmlrpc doesn't exists";
-}
-
+$listthemesondir = new CheckDirFile();
+$listthemesondir->ListFilesonDir($WPTHEMEDIR);
 //#########################################################
 
 //Verify if exists backup file "tar.gz" and ".zip" (etc) or backup of the database. 
 $filelistwebrootdir = scandir("./");
-echo "<br/> <br/> <b> Have compressed or SQL files in the main directory? </b> <br/> <br/>";
+echo "<br/> <b> Have compressed or SQL files in the main directory? </b> <br/> <br/>";
 $negativeanswer = 0;
 
 foreach( $filelistwebrootdir as $files ){
@@ -189,83 +218,30 @@ if ($negativeanswer == 0){
 //#########################################################
 
 //Verify if exists ".php" files in the JS directory. 
-$phpfilelistdirjs = scandir("./wp-includes/js");
 
-echo "<br/> <b> Exists PHP file in the JS directory (./wp-includes/js)? </b> <br/>";
-$negativeanswer = 0;
-foreach( $phpfilelistdirjs as $files ){
-	if(!is_dir($files) and $files != "." and $files != ".."){
-		$ext = pathinfo($files, PATHINFO_EXTENSION);
-		if($ext == "php"){
-			echo "Please, verify this PHP file in the JS diretory: " . $files . " (OFF) <br/>";
-		$negativeanswer++;
-		}
-	}
-}
-if ($negativeanswer == 0){
-	echo "No! (OK) <br/>";
-}
-
+$phpwpincludesjstest = new CheckDirFile();
+$phpwpincludesjstest->SearchTypeFileonDir("php", $WPINCLUDESJSDIR);
 //#########################################################
 
 //Verify if exists ".php" files in the CSS directory. 
-$phpfilelistdircss = scandir("./wp-includes/css");
 
-echo "<br/> <b> Exists PHP file in the CSS directory (./wp-includes/css)? </b> <br/>";
-$negativeanswer = 0;
-foreach( $phpfilelistdircss as $files ){
-	if(!is_dir($files) and $files != "." and $files != ".."){
-		$ext = pathinfo($files, PATHINFO_EXTENSION);
-		if($ext == "php"){
-			echo "Please, verify this PHP file in the CSS directory: " . $files ." (OFF) <br/>";
-		$negativeanswer++;
-		} 
-	}
-}
-if ($negativeanswer == 0){
-	echo "No! (OK) <br/>";
-}
+$phpwpincludescsstest = new CheckDirFile();
+$phpwpincludescsstest->SearchTypeFileonDir("php", $WPINCLUDESCSSDIR);
 //#########################################################
 
 //Verify if exists ".php" files in the JS directory. 
-$phpfilelistdirjs = scandir("./wp-admin/js");
 
-echo "<br/> <b> Exists PHP file in the JS directory (./wp-admin/js)? </b> <br/>";
-$negativeanswer = 0;
-foreach( $phpfilelistdirjs as $files ){
-	if(!is_dir($files) and $files != "." and $files != ".."){
-		$ext = pathinfo($files, PATHINFO_EXTENSION);
-		if($ext == "php"){
-			echo "Please, verify this PHP file in the JS diretory: " . $files . " (OFF) <br/>";
-		$negativeanswer++;
-		}
-	}
-}
-if ($negativeanswer == 0){
-	echo "No! (OK) <br/>";
-}
-
+$phpwpadminjstest = new CheckDirFile();
+$phpwpadminjstest->SearchTypeFileonDir("php", $WPADMINJSDIR);
 //#########################################################
 
 //Verify if exists ".php" files in the CSS directory. 
-$phpfilelistdircss = scandir("./wp-admin/css");
 
-echo "<br/> <b> Exists PHP file in the CSS directory (./wp-admin/css)? </b> <br/>";
-$negativeanswer = 0;
-foreach( $phpfilelistdircss as $files ){
-	if(!is_dir($files) and $files != "." and $files != ".."){
-		$ext = pathinfo($files, PATHINFO_EXTENSION);
-		if($ext == "php"){
-			echo "Please, verify this PHP file in the CSS directory: " . $files ." (OFF) <br/>";
-		$negativeanswer++;
-		} 
-	}
-}
-if ($negativeanswer == 0){
-	echo "No! (OK) <br/> <br/>";
-}
+$phpwpadmincsstest = new CheckDirFile();
+$phpwpadmincsstest->SearchTypeFileonDir("php", $WPADMINCSSDIR);
 //#########################################################
-echo "<br/> <b> Recommendations: </b> <br/> <br/>";
+
+echo "<br/> <b> Additional Recommendations: </b> <br/> <br/>";
 
 echo "You should create your own salt hash to customize the wp-config.php file, just access the following page: <a href='https://api.wordpress.org/secret-key/1.1/salt'> Click Here </a> <br/>";
 
@@ -275,4 +251,5 @@ echo "<br/> Is recommended to access the following link to see the complete hard
 } else {
 	echo "This script doesn't support this CMS installation or put this script in the web root directory of this web service/account.";
 }
+
 ?>
