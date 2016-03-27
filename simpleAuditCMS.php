@@ -37,11 +37,13 @@ update 25-Marc-2016:
 - Created a class with a method to verify a file permission based in the security recommendation.
 - Created a method in a class to verify some kind of file on a directory. 
 - Created a method in a class to list files in a directory. Cleaning up the code, avoiding to repeat the same code in similar functions that test different files and directories;
+
+update 27-Marc-2016:
+- added a function to verify TXT files in the administrative directories.
 ##################
 
 TODO:
 
-- Function to verify TXT files in the administrative directories of Wordpress;
 - Change all the function repeated into PHP OOP class;
 */
 
@@ -57,21 +59,12 @@ echo "<b>REPORT(" . strftime('%d/%B/%Y') ."): </b> <br/> <br/>";
 //GLOBAL VARIABLES
 
 $CORRECTPERM = "0600";
-$READMEFILE = "readme.html";
-$INSTALLWPFILE = "wp-admin/install.php";
-$XMLRPCFILE = "xmlrpc.php";
-$WPINCLUDESJSDIR = "./wp-includes/js";
-$WPINCLUDESCSSDIR = "./wp-includes/css";
-$WPADMINJSDIR = "./wp-admin/js";
-$WPADMINCSSDIR = "./wp-admin/css";
-$WPPLUGINDIR = "./wp-content/plugins/";
-$WPTHEMEDIR = "./wp-content/themes/";
 
 //CLASS
 
+//##############
 class CheckDirFile {
 //Verify if the passed file has the correct permission.
-//##############
 	public function CheckPerm($correctperm, $dirpath){
 		if(file_exists($dirpath)){
 			echo "The file $dirpath exists. ";
@@ -126,6 +119,18 @@ class CheckDirFile {
 //Wordpress instalation test.
 if(file_exists('wp-admin/') and file_exists('wp-includes/') and file_exists('wp-content/')){
 
+//SPECIFIC VARIABLES
+
+$WPREADMEFILE = "readme.html";
+$WPINSTALLFILE = "wp-admin/install.php";
+$WPXMLRPCFILE = "xmlrpc.php";
+$WPINCLUDESJSDIR = "./wp-includes/js";
+$WPINCLUDESCSSDIR = "./wp-includes/css";
+$WPADMINJSDIR = "./wp-admin/js";
+$WPADMINCSSDIR = "./wp-admin/css";
+$WPPLUGINDIR = "./wp-content/plugins/";
+$WPTHEMEDIR = "./wp-content/themes/";
+
 //#########################################################
 
 //Display the current version of the Wordpress analised.
@@ -140,18 +145,18 @@ echo ". Please, verify the latest version on the Wordpress website: <a href='htt
 //Verify if the permission of the file "readme.html" allows to access the page by third party.
 
 $WPauditCheck = new CheckDirFile();
-$WPauditCheck->CheckPerm($CORRECTPERM, $READMEFILE);
+$WPauditCheck->CheckPerm($CORRECTPERM, $WPREADMEFILE);
 
 //#########################################################
 
 //Verify if the permission of the file  "./wp-admin/install.php" allows to access the page by third party.
 
-$WPauditCheck->CheckPerm($CORRECTPERM, $INSTALLWPFILE);
+$WPauditCheck->CheckPerm($CORRECTPERM, $WPINSTALLFILE);
 //#########################################################
 
 //Verify if the permission of the file xmlrpc.php allows to access the page by third party.
 
-$WPauditCheck->CheckPerm($CORRECTPERM, $XMLRPCFILE);
+$WPauditCheck->CheckPerm($CORRECTPERM, $WPXMLRPCFILE);
 //#########################################################
 
 //Verify if the blank index.html are in the directories to avoid directory browsing.
@@ -231,6 +236,26 @@ $WPauditCheck->SearchTypeFileonDir("php", $WPADMINJSDIR);
 //Verify if exists ".php" files in the CSS directory. 
 
 $WPauditCheck->SearchTypeFileonDir("php", $WPADMINCSSDIR);
+//#########################################################
+
+//Verify if exists ".txt" files in the JS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESJSDIR);
+//#########################################################
+
+//Verify if exists ".txt" files in the CSS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESCSSDIR);
+//#########################################################
+
+//Verify if exists ".txt" files in the JS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("txt", $WPADMINJSDIR);
+//#########################################################
+
+//Verify if exists ".txt" files in the CSS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("txt", $WPADMINCSSDIR);
 //#########################################################
 
 echo "<br/> <b> Additional Recommendations: </b> <br/> <br/>";
