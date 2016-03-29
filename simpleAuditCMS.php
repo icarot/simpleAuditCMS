@@ -40,6 +40,7 @@ update 25-Marc-2016:
 
 update 27-Marc-2016:
 - added a function to verify TXT files in the administrative directories.
+- added the PHP verification file in the fonts and images directory (wp-includes/images, wp-includes/fonts, wp-admin/fonts and wp-admin/images);
 ##################
 
 TODO:
@@ -118,6 +119,7 @@ class CheckDirFile {
 //##### WORDPRESS ##### BEGIN
 //Wordpress instalation test.
 if(file_exists('wp-admin/') and file_exists('wp-includes/') and file_exists('wp-content/')){
+echo "<b> CMS: WORDPRESS </b> <br/> <br/>";
 
 //SPECIFIC VARIABLES
 
@@ -130,6 +132,10 @@ $WPADMINJSDIR = "./wp-admin/js";
 $WPADMINCSSDIR = "./wp-admin/css";
 $WPPLUGINDIR = "./wp-content/plugins/";
 $WPTHEMEDIR = "./wp-content/themes/";
+$WPINCLUDESIMAGESDIR = "./wp-includes/images";
+$WPINCLUDESFONTSDIR = "./wp-includes/fonts";
+$WPADMINIMAGESDIR = "./wp-admin/images";
+$WPADMINFONTSDIR = "./wp-admin/fonts";
 
 //#########################################################
 
@@ -187,7 +193,6 @@ echo "<br/> <b> It uses SSL Connection? </b> <br/>";
 
 //Lists all the plugins installed in the wordpress.
 
-
 echo "<br/> <br/> <b> ### Installed Plugins ### </b> <br/>";
 $WPauditCheck->ListFilesonDir($WPPLUGINDIR);
 //#########################################################
@@ -217,7 +222,9 @@ if ($negativeanswer == 0){
 }
 
 //#########################################################
-
+echo "<h4> Directory WP-INCLUDES: </h4>";
+echo "<br/> <b> PHP type file: </b> <br/>";
+//#########################################################
 //Verify if exists ".php" files in the JS directory. 
 
 $WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESJSDIR);
@@ -228,14 +235,17 @@ $WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESJSDIR);
 $WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESCSSDIR);
 //#########################################################
 
-//Verify if exists ".php" files in the JS directory. 
+//Verify if exists ".php" files in the IMAGES directory. 
 
-$WPauditCheck->SearchTypeFileonDir("php", $WPADMINJSDIR);
+$WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESIMAGESDIR);
 //#########################################################
 
-//Verify if exists ".php" files in the CSS directory. 
+//Verify if exists ".php" files in the FONTS directory. 
 
-$WPauditCheck->SearchTypeFileonDir("php", $WPADMINCSSDIR);
+$WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESFONTSDIR);
+
+//#########################################################
+echo "<br/> <b> TXT type file: </b> <br/>";
 //#########################################################
 
 //Verify if exists ".txt" files in the JS directory. 
@@ -248,6 +258,41 @@ $WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESJSDIR);
 $WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESCSSDIR);
 //#########################################################
 
+//Verify if exists ".txt" files in the IMAGES directory. 
+
+$WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESIMAGESDIR);
+//#########################################################
+
+//Verify if exists ".txt" files in the FONTS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESFONTSDIR);
+//#########################################################
+
+echo "<h4> Directory WP-ADMIN: </h4>";
+echo "<br/> <b> PHP type file: </b> <br/>";
+//#########################################################
+
+//Verify if exists ".php" files in the JS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("php", $WPADMINJSDIR);
+//#########################################################
+
+//Verify if exists ".php" files in the CSS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("php", $WPADMINCSSDIR);
+//#########################################################
+//Verify if exists ".php" files in the IMAGES directory. 
+
+$WPauditCheck->SearchTypeFileonDir("php", $WPADMINIMAGESDIR);
+//#########################################################
+
+//Verify if exists ".php" files in the FONTS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("php", $WPADMINFONTSDIR);
+//#########################################################
+echo "<br/> <b> TXT type file: </b><br/>";
+//#########################################################
+
 //Verify if exists ".txt" files in the JS directory. 
 
 $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINJSDIR);
@@ -256,6 +301,16 @@ $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINJSDIR);
 //Verify if exists ".txt" files in the CSS directory. 
 
 $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINCSSDIR);
+//#########################################################
+
+//Verify if exists ".txt" files in the IMAGES directory. 
+
+$WPauditCheck->SearchTypeFileonDir("txt", $WPADMINIMAGESDIR);
+//#########################################################
+
+//Verify if exists ".txt" files in the FONTS directory. 
+
+$WPauditCheck->SearchTypeFileonDir("txt", $WPADMINFONTSDIR);
 //#########################################################
 
 echo "<br/> <b> Additional Recommendations: </b> <br/> <br/>";
