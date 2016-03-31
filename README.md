@@ -1,2 +1,9 @@
-# simpleAuditCMS
+# simpleAuditCMS:
+
+#Objective:
+
 This script is intended to verify if some security configuration are applied on the CMS.
+
+#How to use:
+
+Download this PHP code in the web root directory of the CMS that you want analyse, after this access it via browser: http://IP_or_Domain/simpleAuditCMS.php
