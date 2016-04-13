@@ -44,7 +44,7 @@ update 27-Marc-2016:
 
 update 12-April-2016:
 - added the PHP/TXT verification file in the default themes directories (wp-content/themes/);
-- fix of existence verification directory method SearchTypeFileonDir;
+- fix of verification of existence directory method SearchTypeFileonDir;
 ##################
 
 TODO:
