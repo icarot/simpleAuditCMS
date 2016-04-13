@@ -43,7 +43,8 @@ update 27-Marc-2016:
 - added the PHP verification file in the fonts and images directory (wp-includes/images, wp-includes/fonts, wp-admin/fonts and wp-admin/images);
 
 update 12-April-2016:
-- added the PHP/TXT verification file in the default themes directories (wp-content/theme/);
+- added the PHP/TXT verification file in the default themes directories (wp-content/themes/);
+- fix verification of directory existence of the method SearchTypeFileonDir;
 ##################
 
 TODO:
@@ -85,6 +86,7 @@ class CheckDirFile {
 
 //Verify some file type in a directory.	
 	public function SearchTypeFileonDir ($typefile, $dirpath){
+		if(file_exists($dirpath)){
 		$filelistdir = scandir("$dirpath");
 
 		echo "<br/> <b> Exists " . strtoupper($typefile) . " file in the directory ($dirpath)? </b> <br/>";
@@ -98,11 +100,13 @@ class CheckDirFile {
 			}
 			}
 		}
-		if ($negativeanswer == 0){
-			echo "No! (OK) <br/>";
+			if ($negativeanswer == 0){
+				echo "No! (OK) <br/>";
+			}
+		} else {
+			echo "The file $dirpath doesn't exists (OK) <br/>";
 		}
 	}
-	
 //List all files in a directory.
 	public function ListFilesonDir ($dirpath){
 		
@@ -139,12 +143,16 @@ $WPINCLUDESIMAGESDIR = "./wp-includes/images";
 $WPINCLUDESFONTSDIR = "./wp-includes/fonts";
 $WPADMINIMAGESDIR = "./wp-admin/images";
 $WPADMINFONTSDIR = "./wp-admin/fonts";
-$WPTHEMESTWENTYELEVEN = "./wp-content/themes/twentyeleven";
-$WPTHEMESTWENTYELEVENJS = "./wp-content/themes/twentyeleven/js";
-$WPTHEMESTWENTYELEVENIMAGES = "./wp-content/themes/twentyeleven/images";
-$WPTHEMESTWENTYELEVENIMAGESINC = "./wp-content/themes/twentyeleven/inc/images";
-$WPTHEMESTWENTYTEN = "./wp-content/themes/twentyten";
-$WPTHEMESTWENTYTENIMAGES = "./wp-content/themes/twentyten/images";
+$WPTHEMESTWENTYTHIRTEENCSS = "./wp-content/themes/twentythirteen/css";
+$WPTHEMESTWENTYTHIRTEENIMAGES = "./wp-content/themes/twentythirteen/images";
+$WPTHEMESTWENTYTHIRTEENJS = "./wp-content/themes/twentythirteen/js";
+$WPTHEMESTWENTYFOURTEENCSS = "./wp-content/themes/twentyfourteen/css";
+$WPTHEMESTWENTYFOURTEENIMAGES = "./wp-content/themes/twentyfourteen/images";
+$WPTHEMESTWENTYFOURTEENJS = "./wp-content/themes/twentyfourteen/js";
+$WPTHEMESTWENTYFIFTEENCSS = "./wp-content/themes/twentyfifteen/css";
+$WPTHEMESTWENTYFIFTEENJS = "./wp-content/themes/twentyfifteen/js";
+$WPTHEMESTWENTYSIXTEENCSS = "./wp-content/themes/twentysixteen/css";
+$WPTHEMESTWENTYSIXTEENJS = "./wp-content/themes/twentysixteen/js";
 //#########################################################
 
 //Display the current version of the Wordpress analised.
@@ -320,36 +328,52 @@ $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINIMAGESDIR);
 
 $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINFONTSDIR);
 //#########################################################
-echo "<h4> Default Directory WP-CONTENT/THEMES (twentyeleven and twentyten): </h4>";
+echo "<h4> Default Directory WP-CONTENT/THEMES </h4>";
 echo "<br/> <b> PHP type file: </b> <br/>";
 
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYELEVEN);
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYTHIRTEENCSS);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYELEVENJS);
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYTHIRTEENIMAGES);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYELEVENIMAGES);
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYTHIRTEENJS);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYELEVENIMAGESINC);
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYFOURTEENCSS);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYTEN);
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYFOURTEENIMAGES);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYTENIMAGES);
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYFOURTEENJS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYFIFTEENCSS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYFIFTEENJS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYSIXTEENCSS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYSIXTEENJS);
 //#########################################################
 
 echo "<br/> <b> TXT type file: </b> <br/>";
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYELEVEN);
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYTHIRTEENCSS);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYELEVENJS);
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYTHIRTEENIMAGES);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYELEVENIMAGES);
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYTHIRTEENJS);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYELEVENIMAGESINC);
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYFOURTEENCSS);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYTEN);
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYFOURTEENIMAGES);
 //#########################################################
-$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYTENIMAGES);
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYFOURTEENJS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYFIFTEENCSS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYFIFTEENJS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYSIXTEENCSS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYSIXTEENJS);
 //#########################################################
 
 
