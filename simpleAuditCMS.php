@@ -41,6 +41,9 @@ update 25-Marc-2016:
 update 27-Marc-2016:
 - added a function to verify TXT files in the administrative directories.
 - added the PHP verification file in the fonts and images directory (wp-includes/images, wp-includes/fonts, wp-admin/fonts and wp-admin/images);
+
+update 12-April-2016:
+- added the PHP/TXT verification file in the default themes directories (wp-content/theme/);
 ##################
 
 TODO:
@@ -136,7 +139,12 @@ $WPINCLUDESIMAGESDIR = "./wp-includes/images";
 $WPINCLUDESFONTSDIR = "./wp-includes/fonts";
 $WPADMINIMAGESDIR = "./wp-admin/images";
 $WPADMINFONTSDIR = "./wp-admin/fonts";
-
+$WPTHEMESTWENTYELEVEN = "./wp-content/themes/twentyeleven";
+$WPTHEMESTWENTYELEVENJS = "./wp-content/themes/twentyeleven/js";
+$WPTHEMESTWENTYELEVENIMAGES = "./wp-content/themes/twentyeleven/images";
+$WPTHEMESTWENTYELEVENIMAGESINC = "./wp-content/themes/twentyeleven/inc/images";
+$WPTHEMESTWENTYTEN = "./wp-content/themes/twentyten";
+$WPTHEMESTWENTYTENIMAGES = "./wp-content/themes/twentyten/images";
 //#########################################################
 
 //Display the current version of the Wordpress analised.
@@ -312,6 +320,38 @@ $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINIMAGESDIR);
 
 $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINFONTSDIR);
 //#########################################################
+echo "<h4> Default Directory WP-CONTENT/THEMES (twentyeleven and twentyten): </h4>";
+echo "<br/> <b> PHP type file: </b> <br/>";
+
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYELEVEN);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYELEVENJS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYELEVENIMAGES);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYELEVENIMAGESINC);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYTEN);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("php", $WPTHEMESTWENTYTENIMAGES);
+//#########################################################
+
+echo "<br/> <b> TXT type file: </b> <br/>";
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYELEVEN);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYELEVENJS);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYELEVENIMAGES);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYELEVENIMAGESINC);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYTEN);
+//#########################################################
+$WPauditCheck->SearchTypeFileonDir("txt", $WPTHEMESTWENTYTENIMAGES);
+//#########################################################
+
 
 echo "<br/> <b> Additional Recommendations: </b> <br/> <br/>";
 
