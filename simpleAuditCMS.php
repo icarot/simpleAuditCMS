@@ -45,6 +45,9 @@ update 27-Marc-2016:
 update 12-April-2016:
 - added the PHP/TXT verification file in the default themes directories (wp-content/themes/);
 - fix of verification of existence directory method SearchTypeFileonDir;
+
+update 23-April-2016:
+- added index.html verification in more files;
 ##################
 
 TODO:
@@ -183,7 +186,8 @@ $WPauditCheck->CheckPerm($CORRECTPERM, $WPXMLRPCFILE);
 
 //Verify if the blank index.html are in the directories to avoid directory browsing.
 
-$indexes = array("wp-includes/", "wp-content/", "wp-content/themes/", "wp-content/uploads/", "wp-content/plugins/");
+$indexes = array( $WPADMINJSDIR, $WPADMINCSSDIR, $WPADMINIMAGESDIR, $WPADMINFONTSDIR, $WPINCLUDESCSSDIR, $WPINCLUDESJSDIR, $WPINCLUDESIMAGESDIR, $WPINCLUDESFONTSDIR, $WPPLUGINDIR, $WPTHEMEDIR);
+
 echo "<br/> <b> ### Browsing Directory ### </b> <br/>";
 foreach ($indexes as $dirs){
 	$currentdir = $dirs."index.html";
@@ -195,6 +199,7 @@ foreach ($indexes as $dirs){
 }
 
 echo "<br/>";
+
 //#########################################################
 
 //Check if the Wordpress uses SSL connection.
