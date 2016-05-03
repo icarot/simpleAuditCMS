@@ -3,7 +3,7 @@
 Simple Audit CMS: this script is intended to verify if same security configuration are applied on the CMS.
 
 @author: Icaro Torres
-@version: 0.2.0
+@version: 0.3.0
 
 #### Wordpress ####:
 
@@ -50,15 +50,22 @@ update 23-April-2016:
 - added index.html verification in more files;
 ##################
 
-TODO:
+#### JOOMLA ####:
 
-- Change all the function repeated into PHP OOP class;
+update 30-April-2016:
+- added the CMS Joomla detection;
+- added the plugin list directory;
+- added the templates list directory;
+
+update 01-May-2016:
+-Added the Plugin and Template list, and also the backup file verification in the webroot directory where the Joomla is installed;
+##################
 */
 
 echo "<h2> #### Simple Audit CMS #### </h2> <br/>";
 echo "This script is intended to verify if same security configuration are applied on the CMS. <br/>";
 
-echo "Supported CMS: Wordpress. <br/><br/>";
+echo "Supported CMS: Wordpress and Joomla. <br/><br/>";
 
 //#########################################################
 echo "<b>REPORT(" . strftime('%d/%B/%Y') ."): </b> <br/> <br/>";
@@ -246,94 +253,47 @@ if ($negativeanswer == 0){
 echo "<h4> Directory WP-INCLUDES: </h4>";
 echo "<br/> <b> PHP type file: </b> <br/>";
 //#########################################################
-//Verify if exists ".php" files in the JS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESJSDIR);
 //#########################################################
-
-//Verify if exists ".php" files in the CSS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESCSSDIR);
 //#########################################################
-
-//Verify if exists ".php" files in the IMAGES directory. 
-
 $WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESIMAGESDIR);
 //#########################################################
-
-//Verify if exists ".php" files in the FONTS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("php", $WPINCLUDESFONTSDIR);
-
 //#########################################################
 echo "<br/> <b> TXT type file: </b> <br/>";
 //#########################################################
-
-//Verify if exists ".txt" files in the JS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESJSDIR);
 //#########################################################
-
-//Verify if exists ".txt" files in the CSS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESCSSDIR);
 //#########################################################
-
-//Verify if exists ".txt" files in the IMAGES directory. 
-
 $WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESIMAGESDIR);
 //#########################################################
-
-//Verify if exists ".txt" files in the FONTS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("txt", $WPINCLUDESFONTSDIR);
 //#########################################################
 
 echo "<h4> Directory WP-ADMIN: </h4>";
 echo "<br/> <b> PHP type file: </b> <br/>";
 //#########################################################
-
-//Verify if exists ".php" files in the JS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("php", $WPADMINJSDIR);
 //#########################################################
-
-//Verify if exists ".php" files in the CSS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("php", $WPADMINCSSDIR);
 //#########################################################
-//Verify if exists ".php" files in the IMAGES directory. 
-
 $WPauditCheck->SearchTypeFileonDir("php", $WPADMINIMAGESDIR);
 //#########################################################
-
-//Verify if exists ".php" files in the FONTS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("php", $WPADMINFONTSDIR);
 //#########################################################
 echo "<br/> <b> TXT type file: </b><br/>";
 //#########################################################
-
-//Verify if exists ".txt" files in the JS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINJSDIR);
 //#########################################################
-
-//Verify if exists ".txt" files in the CSS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINCSSDIR);
 //#########################################################
-
-//Verify if exists ".txt" files in the IMAGES directory. 
-
 $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINIMAGESDIR);
 //#########################################################
-
-//Verify if exists ".txt" files in the FONTS directory. 
-
 $WPauditCheck->SearchTypeFileonDir("txt", $WPADMINFONTSDIR);
 //#########################################################
-echo "<h4> Default Directory WP-CONTENT/THEMES </h4>";
+echo "<h4> Default Directory WP-CONTENT/THEMES: </h4>";
 echo "<br/> <b> PHP type file: </b> <br/>";
 
 //#########################################################
@@ -389,8 +349,57 @@ echo "You should create your own salt hash to customize the wp-config.php file, 
 echo "<br/> Is recommended to access the following link to see the complete hardening checklist in the Wordpress: " . "<a href='https://www.owasp.org/index.php/OWASP_Wordpress_Security_Implementation_Guideline'> Click Here </a> <br/> <br/>";
 
 //##### WORDPRESS ##### END
-} else {
-	echo "This script doesn't support this CMS installation or put this script in the web root directory of this web service/account.";
+
+//##### JOOMLA ##### BEGIN
+//Joomla instalation test.
+} elseif (file_exists('administrator/') and file_exists('configuration.php') and file_exists('cli/')){
+echo "<b> CMS: JOOMLA </b> <br/> <br/>";
+
+//SPECIFIC VARIABLES
+$JOOMLAREADME = "README.txt";
+$JOOMLAPLUGINDIR = "./plugins/";
+$JOOMLATEMPLATESDIR = "./administrator/templates/";
+
+$JoomlaCheck = new CheckDirFile();
+
+//#########################################################
+//Verify if the permission of the file "README.txt" allows to access the page by third party.
+
+$JoomlaCheck->CheckPerm($CORRECTPERM, $JOOMLAREADME);
+//#########################################################
+//Lists all the plugins installed in the wordpress.
+
+echo "<br/> <br/> <b> ### Installed Plugins ### </b> <br/>";
+$JoomlaCheck->ListFilesonDir($JOOMLAPLUGINDIR);
+//#########################################################
+//Lists all the themes installed in the wordpress.
+
+echo "<br/> <br/> <b> ### Installed Templates ### </b> <br/>";
+$JoomlaCheck->ListFilesonDir($JOOMLATEMPLATESDIR);
+//#########################################################
+
+//Verify if exists backup file "tar.gz" and ".zip" (etc) or backup of the database. 
+$filelistwebrootdir = scandir("./");
+echo "<br/> <b> Have compressed or SQL files in the main directory? </b> <br/> <br/>";
+$negativeanswer = 0;
+
+foreach( $filelistwebrootdir as $files ){
+	if(!is_dir($files) and $files != "." and $files != ".."){
+		$ext = pathinfo($files, PATHINFO_EXTENSION);
+		if($ext == "sql" or $ext == "zip" or $ext == "gz" or $ext == "bz2" or $ext == "tar" or $ext == "7z"){
+			echo $files ." (OFF) <br/>";
+			$negativeanswer++;
+		}
+	}
+}
+if ($negativeanswer == 0){
+	echo "No! (OK) <br/>";
+}
+
+//#########################################################
+//##### JOOMLA ##### END
+	} else {
+	echo "<b> [WARNING] This script doesn't support this CMS installation or put this script in the web root directory of this web service/account. [WARNING] </b>";
 }
 
 ?>
