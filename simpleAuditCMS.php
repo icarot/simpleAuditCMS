@@ -5,6 +5,12 @@ Simple Audit CMS: this script is intended to verify if same security configurati
 @author: Icaro Torres
 @version: 0.3.0
 
+#### CORE ####:
+
+update 05-June-2016:
+- added the function in Javascript to print the results in the printer device;
+##################
+
 #### Wordpress ####:
 
 update 12-Marc-2016: 
@@ -132,11 +138,20 @@ class CheckDirFile {
 	
 }
 
+echo "<script>
+function PrintPage(){
+	window.print();
+}
+</script>
+";
 
 //##### WORDPRESS ##### BEGIN
 //Wordpress instalation test.
 if(file_exists('wp-admin/') and file_exists('wp-includes/') and file_exists('wp-content/')){
 echo "<b> CMS: WORDPRESS </b> <br/> <br/>";
+
+//Print Page
+echo "<button onclick='PrintPage()'> Print the results </button> <br/> <br/>";
 
 //SPECIFIC VARIABLES
 
@@ -354,6 +369,9 @@ echo "<br/> Is recommended to access the following link to see the complete hard
 //Joomla instalation test.
 } elseif (file_exists('administrator/') and file_exists('configuration.php') and file_exists('cli/')){
 echo "<b> CMS: JOOMLA </b> <br/> <br/>";
+
+//Print Page
+echo "<button onclick='PrintPage()'> Print the results </button> <br/> <br/>";
 
 //SPECIFIC VARIABLES
 $JOOMLAREADME = "README.txt";
