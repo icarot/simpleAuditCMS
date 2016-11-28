@@ -15,3 +15,6 @@ or
 $ curl -O -k https://raw.githubusercontent.com/icarot/simpleAuditCMS/master/simpleAuditCMS.php
 
 And after this access it via browser: http://IP_or_Domain/simpleAuditCMS.php
+
+
+Note: Remember to remove (recommended) or alter the permission (to 600) of this PHP script after the use.
