@@ -57,6 +57,9 @@ update 23-April-2016:
 
 update 17-Nov-2016:
 - added the verification of the permission of the .htacess and wp-config.php files;
+
+update 27-Nov-2016:
+- added the information of the site WordPress URL in the header of the PHP script;
 ##################
 
 #### JOOMLA ####:
@@ -153,6 +156,7 @@ function PrintPage(){
 if(file_exists('wp-admin/') and file_exists('wp-includes/') and file_exists('wp-content/')){
 echo "<b> CMS: WORDPRESS </b> <br/> <br/>";
 
+
 //Print Page
 echo "<button onclick='PrintPage()'> Print the results </button> <br/> <br/>";
 
@@ -188,6 +192,8 @@ $WPTHEMESTWENTYSIXTEENJS = "./wp-content/themes/twentysixteen/js";
 //Display the current version of the Wordpress analised.
 
 require( dirname( __FILE__ ) . '/wp-blog-header.php' );
+
+echo "<strong>Website URL analised:</strong> " . get_site_url() . "<br/><br/>";
 
 echo "The current version of the Wordpress is: ";
 bloginfo('version');
