@@ -289,12 +289,16 @@ $WPauditCheck->ListFilesonDir($WPTHEMEDIR);
 
 echo "<br/> <b> ### List vulnerabilities in the  Plugins ### </b> <br/>";
 $WPauditCheck->ListWPvulns($WPPLUGINDIR);
+
+echo "<br/> Source: <a href='https://wpvulndb.com/'> https://wpvulndb.com/ </a> <br/>";
 //#########################################################
 
 //Lists the vulnrabilities of the themes installed in the wordpress.
 
 echo "<br/> <b> ### List vulnerabilities in the Themes ### </b> <br/>";
 $WPauditCheck->ListWPvulns($WPTHEMEDIR);
+
+echo "<br/> Source: <a href='https://wpvulndb.com/'> https://wpvulndb.com/ </a> <br/>";
 //#########################################################
 
 //Verify if exists backup file "tar.gz" and ".zip" (etc) or backup of the database.
