@@ -3,7 +3,7 @@
 Simple Audit CMS: this script is intended to verify if same security configuration are applied on the CMS.
 
 @author: Icaro Torres
-@version: 0.3.0
+@version: 0.4.0
 
 #### CORE ####:
 
@@ -60,6 +60,9 @@ update 17-Nov-2016:
 
 update 27-Nov-2016:
 - added the information of the site WordPress URL in the header of the PHP script;
+
+update 04-Dec-2016:
+- added the listing of the vulnerabilities of the plugins and themes installed of the WordPress;
 ##################
 
 #### JOOMLA ####:
@@ -137,6 +140,17 @@ class CheckDirFile {
                         $file_full_path = "$dirpath$file/";
                         if(is_dir($file_full_path) and $file != "." and $file != ".."){
                                 echo '- ' . $file . '<br/>';
+                        }
+                }
+        }
+//List vulnerabilities of plugins and themes of the WordPress
+        public function ListWPvulns ($dirpath){
+
+                $listfile = scandir($dirpath);
+                foreach( $listfile as $file ){
+                        $file_full_path = "$dirpath$file/";
+                        if(is_dir($file_full_path) and $file != "." and $file != ".."){
+                                echo '- ' . $file . ': ' . '<a href="https://wpvulndb.com/search?utf8=%E2%9C%93&text=' . $file . '&vuln_type=">' . 'Click here</a> <br/>';
                         }
                 }
         }
@@ -269,6 +283,18 @@ $WPauditCheck->ListFilesonDir($WPPLUGINDIR);
 
 echo "<br/> <b> ### Installed Themes ### </b> <br/>";
 $WPauditCheck->ListFilesonDir($WPTHEMEDIR);
+//#########################################################
+
+//Lists the vulnrabilities of the plugins installed in the wordpress.
+
+echo "<br/> <b> ### List vulnerabilities in the  Plugins ### </b> <br/>";
+$WPauditCheck->ListWPvulns($WPPLUGINDIR);
+//#########################################################
+
+//Lists the vulnrabilities of the themes installed in the wordpress.
+
+echo "<br/> <b> ### List vulnerabilities in the Themes ### </b> <br/>";
+$WPauditCheck->ListWPvulns($WPTHEMEDIR);
 //#########################################################
 
 //Verify if exists backup file "tar.gz" and ".zip" (etc) or backup of the database.
@@ -412,12 +438,12 @@ $JoomlaCheck = new CheckDirFile();
 
 $JoomlaCheck->CheckPerm($CORRECTPERM, $JOOMLAREADME);
 //#########################################################
-//Lists all the plugins installed in the wordpress.
+//Lists all the plugins installed in the joomla.
 
 echo "<br/> <br/> <b> ### Installed Plugins ### </b> <br/>";
 $JoomlaCheck->ListFilesonDir($JOOMLAPLUGINDIR);
 //#########################################################
-//Lists all the themes installed in the wordpress.
+//Lists all the themes installed in the joomla.
 
 echo "<br/> <br/> <b> ### Installed Templates ### </b> <br/>";
 $JoomlaCheck->ListFilesonDir($JOOMLATEMPLATESDIR);
